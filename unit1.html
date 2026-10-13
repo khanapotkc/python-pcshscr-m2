@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน่วยการเรียนรู้ที่ 1 - ว22203 การเขียนโปรแกรม</title>
+    
+    <!-- Google Fonts: Noto Sans Thai & Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans Thai"', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace'],
+                    },
+                    colors: {
+                        python: {
+                            yellow: '#FFD43B',
+                            blue: '#306998',
+                            dark: '#1e1e1e',
+                            darker: '#121212',
+                            card: '#252526'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #121212;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1e1e; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #306998; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFD43B; 
+        }
+        /* Glassmorphism */
+        .glass {
+            background: rgba(37, 37, 38, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .code-bg {
+            background-image: radial-gradient(#306998 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            background-color: #121212;
+            opacity: 0.05;
+        }
+        .code-block {
+            background-color: #1e1e1e;
+            border-left: 4px solid #306998;
+            font-family: 'Fira Code', monospace;
+        }
+        .keyword { color: #569cd6; } /* Python keywords */
+        .string { color: #ce9178; } /* Strings */
+        .function { color: #dcdcaa; } /* Functions like print, input */
+        .comment { color: #6a9955; font-style: italic; } /* Comments */
+        .number { color: #b5cea8; } /* Numbers */
+    </style>
+</head>
+<body class="antialiased font-sans leading-relaxed flex flex-col min-h-screen relative">
+
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 z-[-1] code-bg"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="glass sticky top-0 z-50 px-6 py-4 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group text-gray-300 hover:text-white transition-colors">
+                <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center border border-gray-700 group-hover:border-python-blue transition-all">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </div>
+                <span class="font-bold hidden sm:block">กลับหน้าหลัก</span>
+            </a>
+            
+            <div class="flex items-center gap-3">
+                <i class="fa-brands fa-python text-python-yellow text-2xl"></i>
+                <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-python-blue to-python-yellow">
+                    หน่วยที่ 1 - พื้นฐาน Python
+                </h1>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="relative pt-12 pb-16 px-6">
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <span class="inline-block px-4 py-1 rounded-full bg-python-blue/20 text-python-blue text-sm font-bold tracking-wider mb-4 border border-python-blue/50">
+                Unit 1
+            </span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white leading-tight">
+                ความรู้พื้นฐานการเขียนโปรแกรมภาษาไพทอน
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                เริ่มต้นก้าวแรกสู่การเป็นโปรแกรมเมอร์ เรียนรู้วิธีคิดแบบคอมพิวเตอร์ ทำความรู้จักตัวแปร และคำสั่งพื้นฐานที่ขาดไม่ได้
+            </p>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-6xl mx-auto w-full px-6 pb-20 space-y-16 relative z-10">
+        
+        <!-- Topic 1: Algorithms -->
+        <section id="topic1" class="scroll-mt-24">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-python-blue to-blue-600 flex items-center justify-center text-white text-xl shadow-lg">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white">1) การวิเคราะห์ปัญหาและออกแบบอัลกอริทึม</h3>
+            </div>
+
+            <div class="bg-python-card rounded-2xl border border-gray-700 p-8 shadow-xl">
+                <p class="text-gray-300 mb-8 leading-relaxed">
+                    ก่อนที่เราจะเขียนโค้ดได้ เราต้องเข้าใจปัญหาก่อน <strong>อัลกอริทึม (Algorithm)</strong> คือลำดับขั้นตอนการแก้ปัญหาที่เป็นตรรกะและชัดเจน เพื่อให้คอมพิวเตอร์หรือมนุษย์สามารถทำตามและได้ผลลัพธ์ที่ถูกต้อง มี 4 ขั้นตอนสำคัญ ดังนี้:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <!-- Step 1 -->
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 relative overflow-hidden group hover:border-python-yellow transition-colors">
+                        <div class="text-5xl text-gray-700 absolute -right-2 -bottom-2 group-hover:text-python-yellow/20 transition-colors z-0">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="w-8 h-8 rounded-full bg-gray-700 text-white font-bold flex items-center justify-center mb-4">1</div>
+                            <h4 class="font-bold text-python-yellow mb-2">วิเคราะห์ปัญหา</h4>
+                            <p class="text-sm text-gray-400">ทำความเข้าใจว่าโจทย์ต้องการอะไร มีข้อมูลเข้า (Input) เป็นอะไร และผลลัพธ์ (Output) ที่ต้องการคืออะไร</p>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 relative overflow-hidden group hover:border-python-blue transition-colors">
+                        <div class="text-5xl text-gray-700 absolute -right-2 -bottom-2 group-hover:text-python-blue/20 transition-colors z-0">
+                            <i class="fa-solid fa-sitemap"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="w-8 h-8 rounded-full bg-gray-700 text-white font-bold flex items-center justify-center mb-4">2</div>
+                            <h4 class="font-bold text-python-blue mb-2">ออกแบบวิธีการ</h4>
+                            <p class="text-sm text-gray-400">วางแผนขั้นตอนการทำงาน อาจใช้รหัสลำลอง (Pseudocode) หรือเขียนผังงาน (Flowchart) เพื่อให้เห็นภาพรวม</p>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 relative overflow-hidden group hover:border-green-500 transition-colors">
+                        <div class="text-5xl text-gray-700 absolute -right-2 -bottom-2 group-hover:text-green-500/20 transition-colors z-0">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="w-8 h-8 rounded-full bg-gray-700 text-white font-bold flex items-center justify-center mb-4">3</div>
+                            <h4 class="font-bold text-green-500 mb-2">เขียนโปรแกรม</h4>
+                            <p class="text-sm text-gray-400">นำขั้นตอนที่ออกแบบไว้ มาแปลงเป็นโค้ดภาษาคอมพิวเตอร์ เช่น ภาษา Python</p>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 relative overflow-hidden group hover:border-red-400 transition-colors">
+                        <div class="text-5xl text-gray-700 absolute -right-2 -bottom-2 group-hover:text-red-400/20 transition-colors z-0">
+                            <i class="fa-solid fa-bug-slash"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="w-8 h-8 rounded-full bg-gray-700 text-white font-bold flex items-center justify-center mb-4">4</div>
+                            <h4 class="font-bold text-red-400 mb-2">ทดสอบและแก้ไข</h4>
+                            <p class="text-sm text-gray-400">รันโปรแกรมเพื่อตรวจสอบหาข้อผิดพลาด (Bug) และทำการแก้ไขให้ทำงานได้ถูกต้องตามโจทย์</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise Button -->
+                <div class="flex flex-col sm:flex-row justify-center mt-8 border-t border-gray-700 pt-8 gap-4">
+                    <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-python-blue bg-python-blue/10 border border-python-blue/30 rounded-xl hover:bg-python-blue hover:text-white transition-all shadow-[0_0_15px_rgba(48,105,152,0.2)] hover:shadow-[0_0_20px_rgba(48,105,152,0.4)] transform hover:-translate-y-1">
+                        <i class="fa-solid fa-book-open mr-3 text-xl"></i>
+                        <span class="text-lg">รายละเอียดเพิ่มเติม</span>
+                    </a>
+                    <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white bg-gradient-to-r from-green-600 to-green-500 rounded-xl hover:from-green-500 hover:to-green-400 transition-all shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transform hover:-translate-y-1">
+                        <i class="fa-solid fa-pencil mr-3 text-xl"></i>
+                        <span class="text-lg">ทำแบบฝึกหัด: การวิเคราะห์ปัญหา</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square ml-3 opacity-70 group-hover:opacity-100 transition-opacity"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 2: Basic Knowledge -->
+        <section id="topic2" class="scroll-mt-24">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-python-yellow to-yellow-600 flex items-center justify-center text-gray-900 text-xl shadow-lg">
+                    <i class="fa-solid fa-cubes"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white">2) ตัวแปร ชนิดของข้อมูล และตัวดำเนินการ</h3>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Data Types -->
+                <div class="bg-python-card rounded-2xl border border-gray-700 p-8 shadow-xl">
+                    <h4 class="text-xl font-bold text-python-yellow mb-4 border-b border-gray-700 pb-2">ตัวแปร (Variables) & ชนิดข้อมูล</h4>
+                    <p class="text-gray-300 mb-4 text-sm">
+                        ตัวแปรเปรียบเสมือน <strong>"กล่อง"</strong> ที่ใช้เก็บข้อมูล เพื่อนำไปประมวลผลต่อ ชนิดข้อมูลหลักๆ ในไพทอนมี 4 ชนิด:
+                    </p>
+                    
+                    <ul class="space-y-4 mb-6">
+                        <li class="flex gap-4 items-start bg-gray-800/50 p-3 rounded-lg border border-gray-700">
+                            <span class="px-2 py-1 bg-blue-900/50 text-blue-400 rounded text-xs font-mono font-bold border border-blue-800">int</span>
+                            <div>
+                                <strong class="text-white block">จำนวนเต็ม (Integer)</strong>
+                                <span class="text-gray-400 text-sm">เช่น 10, -5, 0</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-4 items-start bg-gray-800/50 p-3 rounded-lg border border-gray-700">
+                            <span class="px-2 py-1 bg-purple-900/50 text-purple-400 rounded text-xs font-mono font-bold border border-purple-800">float</span>
+                            <div>
+                                <strong class="text-white block">ทศนิยม (Float)</strong>
+                                <span class="text-gray-400 text-sm">เช่น 3.14, -0.5, 10.0</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-4 items-start bg-gray-800/50 p-3 rounded-lg border border-gray-700">
+                            <span class="px-2 py-1 bg-orange-900/50 text-orange-400 rounded text-xs font-mono font-bold border border-orange-800">str</span>
+                            <div>
+                                <strong class="text-white block">ข้อความ (String)</strong>
+                                <span class="text-gray-400 text-sm">ต้องอยู่ในเครื่องหมาย " " หรือ ' ' เช่น "Hello", 'Python'</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-4 items-start bg-gray-800/50 p-3 rounded-lg border border-gray-700">
+                            <span class="px-2 py-1 bg-green-900/50 text-green-400 rounded text-xs font-mono font-bold border border-green-800">bool</span>
+                            <div>
+                                <strong class="text-white block">ค่าความจริง (Boolean)</strong>
+                                <span class="text-gray-400 text-sm">มีแค่ 2 ค่าคือ <code class="text-python-blue">True</code> (จริง) หรือ <code class="text-python-blue">False</code> (เท็จ)</span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="code-block p-4 rounded-lg text-sm">
+<pre><code><span class="comment"># การประกาศตัวแปร</span>
+name = <span class="string">"สมชาย"</span>    <span class="comment"># ข้อความ (str)</span>
+age = <span class="number">14</span>          <span class="comment"># จำนวนเต็ม (int)</span>
+height = <span class="number">165.5</span>    <span class="comment"># ทศนิยม (float)</span>
+is_student = <span class="keyword">True</span> <span class="comment"># บูลีน (bool)</span></code></pre>
+                    </div>
+                </div>
+
+                <!-- Operators -->
+                <div class="bg-python-card rounded-2xl border border-gray-700 p-8 shadow-xl">
+                    <h4 class="text-xl font-bold text-python-blue mb-4 border-b border-gray-700 pb-2">ตัวดำเนินการทางคณิตศาสตร์</h4>
+                    <p class="text-gray-300 mb-4 text-sm">
+                        ใช้สำหรับคำนวณตัวเลขเหมือนวิชาคณิตศาสตร์ แต่มีสัญลักษณ์บางตัวที่ต่างออกไป
+                    </p>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-gray-300">
+                            <thead class="text-xs uppercase bg-gray-800 text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3 rounded-tl-lg">เครื่องหมาย</th>
+                                    <th scope="col" class="px-4 py-3">ความหมาย</th>
+                                    <th scope="col" class="px-4 py-3 rounded-tr-lg">ตัวอย่าง</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-gray-700 bg-gray-800/30">
+                                    <td class="px-4 py-3 font-mono text-python-yellow font-bold text-lg">+</td>
+                                    <td class="px-4 py-3">บวก</td>
+                                    <td class="px-4 py-3 font-mono">5 + 2 = 7</td>
+                                </tr>
+                                <tr class="border-b border-gray-700 bg-gray-800/10">
+                                    <td class="px-4 py-3 font-mono text-python-yellow font-bold text-lg">-</td>
+                                    <td class="px-4 py-3">ลบ</td>
+                                    <td class="px-4 py-3 font-mono">5 - 2 = 3</td>
+                                </tr>
+                                <tr class="border-b border-gray-700 bg-gray-800/30">
+                                    <td class="px-4 py-3 font-mono text-python-yellow font-bold text-lg">*</td>
+                                    <td class="px-4 py-3">คูณ</td>
+                                    <td class="px-4 py-3 font-mono">5 * 2 = 10</td>
+                                </tr>
+                                <tr class="border-b border-gray-700 bg-gray-800/10">
+                                    <td class="px-4 py-3 font-mono text-python-yellow font-bold text-lg">/</td>
+                                    <td class="px-4 py-3">หาร (ได้ทศนิยม)</td>
+                                    <td class="px-4 py-3 font-mono">5 / 2 = 2.5</td>
+                                </tr>
+                                <tr class="border-b border-gray-700 bg-gray-800/30">
+                                    <td class="px-4 py-3 font-mono text-python-yellow font-bold text-lg">//</td>
+                                    <td class="px-4 py-3">หารปัดเศษทิ้ง</td>
+                                    <td class="px-4 py-3 font-mono">5 // 2 = 2</td>
+                                </tr>
+                                <tr class="border-b border-gray-700 bg-gray-800/10">
+                                    <td class="px-4 py-3 font-mono text-python-yellow font-bold text-lg">%</td>
+                                    <td class="px-4 py-3">หารเอาเศษ (มอดุโล)</td>
+                                    <td class="px-4 py-3 font-mono">5 % 2 = 1</td>
+                                </tr>
+                                <tr class="bg-gray-800/30">
+                                    <td class="px-4 py-3 font-mono text-python-yellow font-bold text-lg">**</td>
+                                    <td class="px-4 py-3">ยกกำลัง</td>
+                                    <td class="px-4 py-3 font-mono">5 ** 2 = 25</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Read More Button Topic 2 -->
+            <div class="flex justify-center mt-10">
+                <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-python-yellow bg-python-yellow/10 border border-python-yellow/30 rounded-xl hover:bg-python-yellow hover:text-gray-900 transition-all shadow-[0_0_15px_rgba(255,212,59,0.15)] hover:shadow-[0_0_25px_rgba(255,212,59,0.3)] transform hover:-translate-y-1">
+                    <i class="fa-solid fa-book-open mr-3 text-xl"></i>
+                    <span class="text-lg">รายละเอียดเพิ่มเติม: ตัวแปรและตัวดำเนินการ</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Topic 3: Print & Input -->
+        <section id="topic3" class="scroll-mt-24">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center text-white text-xl shadow-lg">
+                    <i class="fa-solid fa-keyboard"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white">3) คำสั่งพื้นฐาน Python (print & input)</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- print command -->
+                <div class="bg-python-card rounded-2xl border border-gray-700 p-8 shadow-xl">
+                    <h4 class="text-xl font-bold text-white mb-3 font-mono"><span class="function">print</span>()</h4>
+                    <p class="text-gray-300 mb-4 text-sm">
+                        ใช้สำหรับ <strong>"แสดงผล"</strong> ข้อมูลออกทางหน้าจอ (Output) สามารถแสดงได้ทั้งข้อความ ตัวเลข และตัวแปร
+                    </p>
+                    <div class="code-block p-4 rounded-lg text-sm mb-4">
+<pre><code><span class="function">print</span>(<span class="string">"Hello, World!"</span>)
+<span class="function">print</span>(<span class="number">10</span> + <span class="number">5</span>)
+
+name = <span class="string">"Alice"</span>
+<span class="comment"># การนำข้อความมาต่อกับตัวแปร</span>
+<span class="function">print</span>(<span class="string">"My name is"</span>, name)
+<span class="comment"># หรือใช้ f-string (แนะนำ)</span>
+<span class="function">print</span>(<span class="string">f"My name is {name}"</span>)</code></pre>
+                    </div>
+                    <div class="bg-black/50 border border-gray-800 p-3 rounded-lg text-gray-400 font-mono text-xs">
+                        <span class="text-gray-500 block mb-1">>> ผลลัพธ์หน้าจอ:</span>
+                        Hello, World!<br>
+                        15<br>
+                        My name is Alice<br>
+                        My name is Alice
+                    </div>
+                </div>
+
+                <!-- input command -->
+                <div class="bg-python-card rounded-2xl border border-gray-700 p-8 shadow-xl">
+                    <h4 class="text-xl font-bold text-white mb-3 font-mono"><span class="function">input</span>()</h4>
+                    <p class="text-gray-300 mb-4 text-sm">
+                        ใช้สำหรับ <strong>"รับข้อมูล"</strong> จากแป้นพิมพ์ที่ผู้ใช้พิมพ์เข้ามา (Input) <span class="text-python-yellow font-bold">ข้อควรระวัง:</span> ข้อมูลที่รับมาจะเป็นชนิดข้อความ (str) เสมอ หากต้องการใช้คำนวณต้องแปลงเป็นตัวเลขก่อน!
+                    </p>
+                    <div class="code-block p-4 rounded-lg text-sm mb-4">
+<pre><code><span class="comment"># รับชื่อเป็นข้อความ (str)</span>
+user = <span class="function">input</span>(<span class="string">"Enter your name: "</span>)
+
+<span class="comment"># รับตัวเลข ต้องครอบด้วย int() หรือ float()</span>
+age = <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter your age: "</span>))
+next_year = age + <span class="number">1</span>
+
+<span class="function">print</span>(<span class="string">f"Hi {user}, next year you will be {next_year}"</span>)</code></pre>
+                    </div>
+                    <div class="bg-black/50 border border-gray-800 p-3 rounded-lg text-gray-400 font-mono text-xs">
+                        <span class="text-gray-500 block mb-1">>> หน้าจอเมื่อรัน (ผู้ใช้พิมพ์ John และ 14):</span>
+                        Enter your name: <span class="text-white">John</span><br>
+                        Enter your age: <span class="text-white">14</span><br>
+                        Hi John, next year you will be 15
+                    </div>
+                </div>
+            </div>
+
+            <!-- Read More Button Topic 3 -->
+            <div class="flex justify-center mt-10">
+                <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-gray-800 border border-gray-600 rounded-xl hover:bg-gray-700 hover:border-gray-500 transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transform hover:-translate-y-1">
+                    <i class="fa-solid fa-book-open mr-3 text-xl"></i>
+                    <span class="text-lg">รายละเอียดเพิ่มเติม: คำสั่ง Print และ Input</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black py-8 border-t border-gray-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 text-center flex flex-col items-center">
+            <div class="text-python-blue text-3xl mb-4 opacity-50">
+                <i class="fa-brands fa-python"></i>
+            </div>
+            <p class="text-gray-400 text-sm md:text-base leading-relaxed mb-2">
+                Copyright © 2026 บทเรียนออนไลน์ การเขียนโปรแกรมคอมพิวเตอร์<br class="hidden md:block">
+                ชั้นมัธยมศึกษาปีที่2 โรงเรียนวิทยาศาสตร์จุฬาภรณราชวิทยาลัย เชียงราย
+            </p>
+            <p class="text-gray-500 text-xs mt-2 font-mono">
+                Dev by Khanapot Chaiwanna, All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
