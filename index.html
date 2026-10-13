@@ -473,24 +473,21 @@
         const REG_SHEET_ID = '16D2WJ4909gs053wyAAjxItYmgPAn2VUc_qZ68mBpeto';
         
         // --- Auto Login Check ---
-        // เมื่อหน้าเว็บโหลด ให้เช็คว่าเคยล็อกอินไว้ใน Session หรือไม่
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = sessionStorage.getItem('loggedInUser');
             if (savedUser) {
                 const user = JSON.parse(savedUser);
-                // ข้ามหน้าต่างล็อกอินและแสดงหน้าบทเรียนทันที
                 document.getElementById('login-modal').classList.add('hidden');
                 
                 const mainContent = document.getElementById('main-content');
                 mainContent.classList.remove('hidden');
                 mainContent.classList.add('flex');
+                mainContent.style.opacity = '1';
                 
-                // คืนค่าข้อมูลผู้ใช้
                 window.currentUserIsTeacher = user.isTeacher;
                 window.currentUserName = user.name;
                 document.getElementById('display-name').innerText = user.name;
 
-                // แสดงแผงควบคุมสำหรับครูถ้าเป็นครู
                 if (user.isTeacher) {
                     document.getElementById('teacher-dashboard').classList.remove('hidden');
                 }
@@ -503,9 +500,6 @@
             try {
                 const response = await fetch(url);
                 const text = await response.text();
-                
-                // GViz returns a string like: /*O_o*/ google.visualization.Query.setResponse({ ...json... });
-                // We need to extract just the JSON part.
                 const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
                 const data = JSON.parse(jsonString);
                 return data.table.rows;
@@ -534,17 +528,15 @@
                     return;
                 }
 
-                // 2. Fetch Login Data from Columns (Select * to get Class in Col E and Number in Col F)
+                // 2. Fetch Login Data from Columns
                 const loginRows = await fetchSheetData(LOGIN_SHEET_ID, 'select *');
                 
                 let userFound = false;
                 let loggedInUser = { name: '', class: '', num: '' };
                 
-                // Search for the user in the fetched data
                 for (let i = 0; i < loginRows.length; i++) {
                     const row = loginRows[i].c;
                     
-                    // Column Index: A=0, B=1, C=2, D=3, E=4
                     const studentNum = row[0] && row[0].v ? String(row[0].v).trim() : '-';       // Col A: เลขที่
                     const fullName = row[1] && row[1].v ? String(row[1].v).trim() : '';          // Col B: ชื่อ-นามกุล
                     const uName = row[2] && row[2].v ? String(row[2].v).trim() : '';             // Col C: Username
@@ -553,7 +545,7 @@
                     
                     if (uName === usernameInput && pWord === passwordInput) {
                         userFound = true;
-                        loggedInUser.name = fullName || uName; // แสดงชื่อ-นามกุล ถ้าไม่มีให้ใช้ Username แทน
+                        loggedInUser.name = fullName || uName; 
                         loggedInUser.class = className;
                         loggedInUser.num = studentNum;
                         break;
@@ -562,13 +554,11 @@
                 
                 if (userFound) {
                     // 3. Check Registration Status
-                    // We fetch the whole sheet or specific column if we know it. Assuming name is in Col C here too, or just fetch all and search.
                     const regRows = await fetchSheetData(REG_SHEET_ID, 'select *');
                     let isRegistered = false;
                     
                     for (let i = 0; i < regRows.length; i++) {
                         const rowCells = regRows[i].c;
-                        // Search across all columns in the row for the username
                         for (let j = 0; j < rowCells.length; j++) {
                             const cellValue = rowCells[j] && rowCells[j].v ? String(rowCells[j].v).trim() : '';
                             if (cellValue.includes(usernameInput)) {
@@ -592,36 +582,48 @@
                 console.error("Login process failed", err);
                 showError("เกิดข้อผิดพลาดในการเชื่อมต่อข้อมูล กรุณาตรวจสอบอินเทอร์เน็ตหรือลองใหม่");
             } finally {
-                // Reset UI
                 btn.innerHTML = '<span>เข้าสู่ระบบ</span>';
                 btn.disabled = false;
             }
         });
 
+        // --- Stable Modal Transition Helper ---
+        // ใช้ requestAnimationFrame แทน setTimeout เพื่อความลื่นไหลของ CSS Transition
+        function showModalSmoothly(modalElement, callback) {
+            modalElement.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    callback();
+                });
+            });
+        }
+
         function showRegistrationPrompt(username) {
             document.getElementById('reg-username-display').innerText = username;
             const modal = document.getElementById('registration-modal');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
+            showModalSmoothly(modal, () => {
                 modal.classList.remove('opacity-0');
-            }, 10);
+            });
         }
 
         function closeRegistrationModal() {
             const modal = document.getElementById('registration-modal');
             modal.classList.add('opacity-0');
+            modal.style.pointerEvents = 'none'; // ป้องกันการคลิกซ้อน
             setTimeout(() => {
                 modal.classList.add('hidden');
+                modal.style.pointerEvents = 'auto'; // คืนค่า
             }, 300);
         }
 
         function handleSuccessfulLogin(displayName, className, studentNum, isTeacher) {
-            // Hide Login Modal
             const loginModal = document.getElementById('login-modal');
             loginModal.classList.add('opacity-0');
+            loginModal.style.pointerEvents = 'none'; // ป้องกันการคลิกซ้อน
             
             setTimeout(() => {
                 loginModal.classList.add('hidden');
+                loginModal.style.pointerEvents = 'auto'; // คืนค่า
                 
                 // Set Welcome Data
                 document.getElementById('welcome-name').innerText = `ยินดีต้อนรับ ${displayName}`;
@@ -632,22 +634,19 @@
                     document.getElementById('welcome-details').innerHTML = `<i class="fa-solid fa-users-rectangle mr-2 text-python-yellow"></i>ชั้น ${className}, เลขที่ ${studentNum}`;
                 }
 
-                // Show Welcome Modal
+                // Show Welcome Modal smoothly
                 const welcomeModal = document.getElementById('welcome-modal');
                 const welcomeContent = document.getElementById('welcome-modal-content');
-                welcomeModal.classList.remove('hidden');
                 
-                setTimeout(() => {
+                showModalSmoothly(welcomeModal, () => {
                     welcomeModal.classList.remove('opacity-0');
                     welcomeContent.classList.remove('scale-95');
                     welcomeContent.classList.add('scale-100');
-                }, 10);
+                });
                 
-                // Store user data globally for when modal closes
                 window.currentUserIsTeacher = isTeacher;
                 window.currentUserName = displayName;
                 
-                // --- Save login state to Session Storage ---
                 sessionStorage.setItem('loggedInUser', JSON.stringify({
                     name: displayName,
                     isTeacher: isTeacher
@@ -661,25 +660,34 @@
             const welcomeContent = document.getElementById('welcome-modal-content');
             
             welcomeModal.classList.add('opacity-0');
+            welcomeModal.style.pointerEvents = 'none'; // ป้องกันคลิกเบิ้ล
             welcomeContent.classList.remove('scale-100');
             welcomeContent.classList.add('scale-95');
             
             setTimeout(() => {
                 welcomeModal.classList.add('hidden');
+                welcomeModal.style.pointerEvents = 'auto'; // คืนค่า
                 
-                // Show Main Content
+                // Show Main Content with Fade In
                 const mainContent = document.getElementById('main-content');
-                mainContent.classList.remove('hidden');
-                mainContent.classList.add('flex'); // Because it's a flex-col layout
+                mainContent.style.opacity = '0';
+                mainContent.style.transition = 'opacity 0.8s ease-in-out';
                 
-                // Update Nav Bar
+                mainContent.classList.remove('hidden');
+                mainContent.classList.add('flex'); 
+                
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        mainContent.style.opacity = '1';
+                    });
+                });
+                
                 document.getElementById('display-name').innerText = window.currentUserName;
 
-                // Show Teacher Dashboard if applicable
                 if (window.currentUserIsTeacher) {
                     document.getElementById('teacher-dashboard').classList.remove('hidden');
                 }
-            }, 500); // 500ms to match the duration-500 transition
+            }, 500); 
         }
 
         function showError(msg = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง หรือยังไม่ได้ลงทะเบียน") {
@@ -687,33 +695,29 @@
             errorDiv.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> ${msg}`;
             errorDiv.classList.remove('hidden');
             
-            // Shake animation
             const form = document.getElementById('login-modal').querySelector('.bg-python-card');
             form.classList.add('animate-[shake_0.5s_ease-in-out]');
             setTimeout(() => form.classList.remove('animate-[shake_0.5s_ease-in-out]'), 500);
         }
 
         function logout() {
-            // ลบข้อมูลการล็อกอินออกจาก Session Storage
             sessionStorage.removeItem('loggedInUser');
 
-            // Hide Main Content
             const mainContent = document.getElementById('main-content');
-            mainContent.classList.add('hidden');
-            mainContent.classList.remove('flex');
+            mainContent.style.opacity = '0'; // Fade out main content
             
-            // Hide Teacher Dashboard
-            document.getElementById('teacher-dashboard').classList.add('hidden');
-
-            // Reset Form
-            document.getElementById('login-form').reset();
-            
-            // Show Login Modal
-            const modal = document.getElementById('login-modal');
-            modal.classList.remove('hidden');
             setTimeout(() => {
-                modal.classList.remove('opacity-0');
-            }, 10);
+                mainContent.classList.add('hidden');
+                mainContent.classList.remove('flex');
+                
+                document.getElementById('teacher-dashboard').classList.add('hidden');
+                document.getElementById('login-form').reset();
+                
+                const modal = document.getElementById('login-modal');
+                showModalSmoothly(modal, () => {
+                    modal.classList.remove('opacity-0');
+                });
+            }, 500); // Wait for main content to fade out
         }
 
         // Add shake keyframe dynamically
