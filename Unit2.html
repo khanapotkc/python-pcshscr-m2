@@ -77,18 +77,17 @@
             background-color: #1e1e1e;
             border-left: 4px solid #22c55e;
             font-family: 'Fira Code', monospace;
-            font-variant-ligatures: none; /* ปิดการรวมสัญลักษณ์ >=, == ของฟอนต์ Fira Code เพื่อไม่ให้นักเรียนสับสน */
+            font-variant-ligatures: none; /* ปิดการรวมสัญลักษณ์ >=, == ของฟอนต์ Fira Code */
         }
-        /* ปิด Ligatures สำหรับฟอนต์ Fira Code ทั้งหน้าเว็บ เพื่อให้ตารางแสดงผลแยกร่างถูกต้อง */
+        /* ปิด Ligatures สำหรับฟอนต์ Fira Code ทั้งหน้าเว็บ */
         code, .font-mono {
             font-variant-ligatures: none !important;
         }
-        .keyword { color: #c586c0; } /* Python keywords like if, else, elif */
-        .string { color: #ce9178; } /* Strings */
-        .function { color: #dcdcaa; } /* Functions like print, input */
-        .comment { color: #6a9955; font-style: italic; } /* Comments */
-        .number { color: #b5cea8; } /* Numbers */
-        .operator { color: #d4d4d4; }
+        .keyword { color: #c586c0; } 
+        .string { color: #ce9178; } 
+        .function { color: #dcdcaa; } 
+        .comment { color: #6a9955; font-style: italic; }
+        .number { color: #b5cea8; } 
     </style>
 </head>
 <body class="antialiased font-sans leading-relaxed flex flex-col min-h-screen relative">
@@ -144,7 +143,7 @@
                     ก่อนที่จะสร้างเงื่อนไขได้ เราต้องรู้จักเครื่องมือที่ใช้ในการเปรียบเทียบค่าสองค่า หรือรวมเงื่อนไขเข้าด้วยกัน ซึ่งผลลัพธ์ที่ได้จะเป็นจริง (<code class="text-python-blue font-bold">True</code>) หรือ เท็จ (<code class="text-python-blue font-bold">False</code>) เสมอ
                 </p>
 
-                <!-- Warning Box: Math vs Python -->
+                <!-- Warning Box -->
                 <div class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-5 mb-8">
                     <h4 class="text-blue-400 font-bold mb-2 flex items-center gap-2">
                         <i class="fa-solid fa-triangle-exclamation"></i> ข้อแตกต่างจากวิชาคณิตศาสตร์
@@ -272,6 +271,34 @@
                     </div>
                 </div>
 
+                <!-- Interactive: Condition Evaluator -->
+                <div class="mt-8 mb-10 bg-gray-800/40 rounded-2xl border border-gray-700 p-6 md:p-8">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fa-solid fa-gamepad text-python-yellow text-2xl"></i>
+                        <h4 class="text-lg font-bold text-white">Interactive: เครื่องจำลองประเมินเงื่อนไข</h4>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6">ลองใส่ตัวเลขและเปลี่ยนเครื่องหมายเปรียบเทียบ เพื่อดูผลลัพธ์ว่าคอมพิวเตอร์มองว่าเป็น จริง (True) หรือ เท็จ (False)</p>
+                    
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-4 bg-black/40 p-6 rounded-xl font-mono text-xl">
+                        <input type="number" id="cond-n1" value="10" oninput="evalCondition()" class="w-24 bg-gray-700 border border-gray-600 rounded-lg p-3 text-white text-center focus:ring-2 focus:ring-python-yellow outline-none">
+                        
+                        <select id="cond-op" onchange="evalCondition()" class="bg-python-blue border border-blue-500 rounded-lg p-3 text-white text-center font-bold outline-none cursor-pointer hover:bg-blue-600 appearance-none px-6 text-xl">
+                            <option value=">">&gt;</option>
+                            <option value="<">&lt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="==" selected>==</option>
+                            <option value="!=">!=</option>
+                        </select>
+                        
+                        <input type="number" id="cond-n2" value="10" oninput="evalCondition()" class="w-24 bg-gray-700 border border-gray-600 rounded-lg p-3 text-white text-center focus:ring-2 focus:ring-python-yellow outline-none">
+                        
+                        <span class="text-white font-bold mx-2">👉</span>
+                        
+                        <div class="min-w-[100px] bg-gray-800 border-2 border-green-500 rounded-lg p-3 text-green-400 font-bold text-center" id="cond-result">True</div>
+                    </div>
+                </div>
+
                 <!-- Buttons Topic 1 -->
                 <div class="flex flex-wrap justify-center gap-4 mt-6">
                     <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-8 py-3.5 font-bold text-gray-300 bg-gray-800 border border-gray-600 rounded-xl hover:bg-gray-700 hover:text-white transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transform hover:-translate-y-1 text-center">
@@ -319,6 +346,21 @@ score = <span class="function">int</span>(<span class="function">input</span>(<s
 <span class="keyword">else</span>:
     <span class="function">print</span>(<span class="string">"เสียใจด้วย คุณสอบตก"</span>)
     <span class="function">print</span>(<span class="string">"พยายามใหม่ในครั้งหน้านะ"</span>)</code></pre>
+                    </div>
+                </div>
+
+                <!-- Interactive: Terminal Simulator for if...else -->
+                <div class="mt-8 mb-10 bg-[#1e1e1e] rounded-2xl border border-gray-700 overflow-hidden shadow-2xl">
+                    <div class="bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700">
+                        <div class="flex items-center gap-2 text-gray-300 font-bold text-sm">
+                            <i class="fa-brands fa-python text-python-yellow"></i> Interactive: จำลองการทำงานของ if...else
+                        </div>
+                        <button onclick="runTerm2()" class="bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded text-sm font-bold transition-colors flex items-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-play"></i> Run Code
+                        </button>
+                    </div>
+                    <div class="bg-black p-6 font-mono text-sm min-h-[160px] relative" id="term-out-2">
+                        <div class="text-gray-500">>_ Ready... (คลิก Run Code ด้านบนเพื่อเริ่มต้นตรวจสอบคะแนนสอบ)</div>
                     </div>
                 </div>
 
@@ -383,6 +425,21 @@ score = <span class="number">75</span>
                     </div>
                 </div>
 
+                <!-- Interactive: Terminal Simulator for elif -->
+                <div class="mt-8 mb-10 bg-[#1e1e1e] rounded-2xl border border-gray-700 overflow-hidden shadow-2xl">
+                    <div class="bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700">
+                        <div class="flex items-center gap-2 text-gray-300 font-bold text-sm">
+                            <i class="fa-brands fa-python text-python-yellow"></i> Interactive: จำลองโปรแกรมตัดเกรด (elif)
+                        </div>
+                        <button onclick="runTerm3()" class="bg-python-blue hover:bg-blue-600 text-white px-4 py-1.5 rounded text-sm font-bold transition-colors flex items-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-play"></i> Run Code
+                        </button>
+                    </div>
+                    <div class="bg-black p-6 font-mono text-sm min-h-[160px] relative" id="term-out-3">
+                        <div class="text-gray-500">>_ Ready... (คลิก Run Code ด้านบนเพื่อจำลองการตัดเกรด)</div>
+                    </div>
+                </div>
+
                 <!-- Buttons Topic 3 -->
                 <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-4 mt-6">
                     <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-gray-300 bg-gray-800 border border-gray-600 rounded-xl hover:bg-gray-700 transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transform hover:-translate-y-1">
@@ -444,6 +501,21 @@ age = <span class="function">int</span>(<span class="function">input</span>(<spa
                     </div>
                 </div>
 
+                <!-- Interactive: Terminal Simulator for Nested if -->
+                <div class="mt-8 mb-10 bg-[#1e1e1e] rounded-2xl border border-gray-700 overflow-hidden shadow-2xl">
+                    <div class="bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700">
+                        <div class="flex items-center gap-2 text-gray-300 font-bold text-sm">
+                            <i class="fa-brands fa-python text-python-yellow"></i> Interactive: จำลองตรวจสอบสิทธิ์เลือกตั้ง (Nested if)
+                        </div>
+                        <button onclick="runTerm4()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-1.5 rounded text-sm font-bold transition-colors flex items-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-play"></i> Run Code
+                        </button>
+                    </div>
+                    <div class="bg-black p-6 font-mono text-sm min-h-[180px] relative" id="term-out-4">
+                        <div class="text-gray-500">>_ Ready... (คลิก Run Code ด้านบนเพื่อจำลองระบบตรวจสอบสิทธิ์)</div>
+                    </div>
+                </div>
+
                 <!-- Buttons Topic 4 -->
                 <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-4 mt-6">
                     <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-gray-300 bg-gray-800 border border-gray-600 rounded-xl hover:bg-gray-700 transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transform hover:-translate-y-1">
@@ -480,5 +552,130 @@ age = <span class="function">int</span>(<span class="function">input</span>(<spa
         </div>
     </footer>
 
+    <script>
+        // Interactive 1: Condition Evaluator
+        function evalCondition() {
+            let n1 = parseFloat(document.getElementById('cond-n1').value);
+            let n2 = parseFloat(document.getElementById('cond-n2').value);
+            let op = document.getElementById('cond-op').value;
+            let res = false;
+            
+            if(isNaN(n1)) n1 = 0; 
+            if(isNaN(n2)) n2 = 0;
+            
+            switch(op) {
+                case '>': res = n1 > n2; break;
+                case '<': res = n1 < n2; break;
+                case '==': res = n1 === n2; break;
+                case '!=': res = n1 !== n2; break;
+                case '>=': res = n1 >= n2; break;
+                case '<=': res = n1 <= n2; break;
+            }
+            
+            let out = document.getElementById('cond-result');
+            out.innerText = res ? 'True' : 'False';
+            
+            if(res) {
+                out.className = 'min-w-[100px] bg-gray-800 border-2 border-green-500 rounded-lg p-3 text-green-400 font-bold text-center';
+            } else {
+                out.className = 'min-w-[100px] bg-gray-800 border-2 border-red-500 rounded-lg p-3 text-red-400 font-bold text-center';
+            }
+        }
+
+        // Interactive 2: if...else Terminal
+        function runTerm2() {
+            let out = document.getElementById('term-out-2');
+            out.innerHTML = `
+                <div class="mb-1"><span class="text-green-400">กรอกคะแนนของคุณ: </span>
+                <input type="number" id="sim-input-t2" class="bg-transparent border-b border-green-700 outline-none text-white w-20" onkeydown="handleTerm2(event)" autocomplete="off"></div>
+            `;
+            setTimeout(() => document.getElementById('sim-input-t2').focus(), 100);
+        }
+
+        function handleTerm2(e) {
+            if(e.key === 'Enter') {
+                e.target.disabled = true; 
+                e.target.classList.replace('border-b', 'border-none');
+                let score = parseInt(e.target.value) || 0;
+                let out = document.getElementById('term-out-2');
+                
+                if(score >= 50) {
+                    out.innerHTML += `<div class="text-white mt-2">ยินดีด้วย! คุณสอบผ่าน</div>`;
+                } else {
+                    out.innerHTML += `<div class="text-white mt-2">เสียใจด้วย คุณสอบตก<br>พยายามใหม่ในครั้งหน้านะ</div>`;
+                }
+                out.innerHTML += `<div class="text-gray-500 mt-4">>_ Program finished.</div>`;
+            }
+        }
+
+        // Interactive 3: if...elif...else Terminal
+        function runTerm3() {
+            let out = document.getElementById('term-out-3');
+            out.innerHTML = `
+                <div class="mb-1"><span class="text-python-blue">กรอกคะแนนของคุณ (0-100): </span>
+                <input type="number" id="sim-input-t3" class="bg-transparent border-b border-blue-700 outline-none text-white w-20" onkeydown="handleTerm3(event)" autocomplete="off"></div>
+            `;
+            setTimeout(() => document.getElementById('sim-input-t3').focus(), 100);
+        }
+
+        function handleTerm3(e) {
+            if(e.key === 'Enter') {
+                e.target.disabled = true; 
+                e.target.classList.replace('border-b', 'border-none');
+                let score = parseInt(e.target.value) || 0;
+                let out = document.getElementById('term-out-3');
+                let grade = "0";
+                
+                if(score >= 80) grade = "4";
+                else if(score >= 70) grade = "3";
+                else if(score >= 60) grade = "2";
+                else if(score >= 50) grade = "1";
+                
+                out.innerHTML += `<div class="text-white mt-2">เกรด ${grade}</div>`;
+                out.innerHTML += `<div class="text-gray-500 mt-4">>_ Program finished.</div>`;
+            }
+        }
+
+        // Interactive 4: Nested if Terminal
+        function runTerm4() {
+            let out = document.getElementById('term-out-4');
+            out.innerHTML = `
+                <div class="mb-1"><span class="text-purple-400">ใส่อายุของคุณ: </span>
+                <input type="number" id="sim-input-t4-1" class="bg-transparent border-b border-purple-700 outline-none text-white w-20" onkeydown="handleTerm4(event, 1)" autocomplete="off"></div>
+            `;
+            setTimeout(() => document.getElementById('sim-input-t4-1').focus(), 100);
+        }
+
+        function handleTerm4(e, step) {
+            if(e.key === 'Enter') {
+                e.target.disabled = true; 
+                e.target.classList.replace('border-b', 'border-none');
+                let out = document.getElementById('term-out-4');
+                
+                if(step === 1) {
+                    let age = parseInt(e.target.value) || 0;
+                    if(age >= 18) {
+                        out.innerHTML += `<div class="text-white mt-2 mb-3">คุณบรรลุนิติภาวะแล้ว</div>`;
+                        out.innerHTML += `
+                            <div class="mb-1"><span class="text-purple-400">ลงทะเบียนเลือกตั้งหรือยัง (y/n)? </span>
+                            <input type="text" id="sim-input-t4-2" class="bg-transparent border-b border-purple-700 outline-none text-white w-20" onkeydown="handleTerm4(event, 2)" autocomplete="off"></div>
+                        `;
+                        setTimeout(() => document.getElementById('sim-input-t4-2').focus(), 100);
+                    } else {
+                        out.innerHTML += `<div class="text-white mt-2">คุณยังเด็กเกินไป ไม่มีสิทธิ์เลือกตั้ง</div>`;
+                        out.innerHTML += `<div class="text-gray-500 mt-4">>_ Program finished.</div>`;
+                    }
+                } else if(step === 2) {
+                    let reg = e.target.value.toLowerCase().trim();
+                    if(reg === 'y') {
+                        out.innerHTML += `<div class="text-green-400 font-bold mt-2">คุณมีสิทธิ์ไปเลือกตั้งได้!</div>`;
+                    } else {
+                        out.innerHTML += `<div class="text-red-400 font-bold mt-2">กรุณาไปลงทะเบียนก่อนเลือกตั้ง</div>`;
+                    }
+                    out.innerHTML += `<div class="text-gray-500 mt-4">>_ Program finished.</div>`;
+                }
+            }
+        }
+    </script>
 </body>
 </html>
