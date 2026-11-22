@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน่วยการเรียนรู้ที่ 3 - ว22203 การเขียนโปรแกรม</title>
+    
+    <!-- Google Fonts: Noto Sans Thai & Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans Thai"', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace'],
+                    },
+                    colors: {
+                        python: {
+                            yellow: '#FFD43B',
+                            blue: '#306998',
+                            dark: '#1e1e1e',
+                            darker: '#121212',
+                            card: '#252526'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #121212;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1e1e; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #306998; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFD43B; 
+        }
+        /* Glassmorphism */
+        .glass {
+            background: rgba(37, 37, 38, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .code-bg {
+            background-image: radial-gradient(#a855f7 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            background-color: #121212;
+            opacity: 0.03;
+        }
+        .code-block {
+            background-color: #1e1e1e;
+            border-left: 4px solid #a855f7;
+            font-family: 'Fira Code', monospace;
+            font-variant-ligatures: none;
+        }
+        /* ปิด Ligatures สำหรับฟอนต์ Fira Code ทั้งหน้าเว็บ */
+        code, .font-mono {
+            font-variant-ligatures: none !important;
+        }
+        .keyword { color: #c586c0; } 
+        .string { color: #ce9178; } 
+        .function { color: #dcdcaa; } 
+        .comment { color: #6a9955; font-style: italic; }
+        .number { color: #b5cea8; } 
+    </style>
+</head>
+<body class="antialiased font-sans leading-relaxed flex flex-col min-h-screen relative">
+
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 z-[-1] code-bg"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="glass sticky top-0 z-50 px-6 py-4 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group text-gray-300 hover:text-white transition-colors">
+                <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center border border-gray-700 group-hover:border-purple-500 transition-all">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </div>
+                <span class="font-bold hidden sm:block">กลับหน้าหลัก</span>
+            </a>
+            
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-rotate-right text-purple-500 text-2xl"></i>
+                <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-600">
+                    หน่วยที่ 3 - การเขียนโปรแกรมแบบวนซ้ำ
+                </h1>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="relative pt-12 pb-16 px-6">
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <span class="inline-block px-4 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold tracking-wider mb-4 border border-purple-500/50">
+                Unit 3
+            </span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white leading-tight">
+                การเขียนโปรแกรมแบบวนซ้ำ
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                เรียนรู้การใช้คำสั่ง while และ for เพื่อสั่งให้คอมพิวเตอร์ทำงานซ้ำๆ ตามรอบหรือเงื่อนไขที่กำหนด ช่วยลดบรรทัดโค้ดและเพิ่มประสิทธิภาพของโปรแกรม
+            </p>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-6xl mx-auto w-full px-6 pb-20 space-y-16 relative z-10">
+        
+        <!-- Topic 1: while loop -->
+        <section id="topic1" class="scroll-mt-24">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-orange-700 border border-orange-600 flex items-center justify-center text-white text-xl shadow-lg">
+                    <i class="fa-solid fa-arrow-rotate-left"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white">1) การเขียนโปรแกรมแบบวนซ้ำ (while)</h3>
+            </div>
+
+            <div class="bg-python-card rounded-2xl border border-gray-700 p-8 shadow-xl">
+                <p class="text-gray-300 mb-6 leading-relaxed">
+                    <code class="text-orange-400 font-bold">while loop</code> เป็นคำสั่งวนซ้ำที่ง่ายและพื้นฐานที่สุดในภาษา Python ใช้ควบคุมโปรแกรมให้ทำงานบางอย่างซ้ำๆ <strong class="text-white">ในขณะที่เงื่อนไขของลูปนั้นยังคงเป็นจริงอยู่ (True)</strong>
+                </p>
+
+                <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Concept & Flowchart -->
+                    <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700">
+                        <h4 class="font-bold text-orange-400 mb-4"><i class="fa-solid fa-sitemap mr-2"></i> โครงสร้างและการทำงาน</h4>
+                        <div class="font-mono text-sm space-y-2 text-gray-300 bg-black/40 p-4 rounded-lg mb-4">
+                            <div><span class="text-gray-500">กำหนดตัวแปรเริ่มต้น</span></div>
+                            <div><span class="keyword text-orange-400">while</span> เงื่อนไข:</div>
+                            <div class="pl-8 text-gray-500"># คำสั่งที่ต้องการให้ทำซ้ำ</div>
+                            <div class="pl-8 text-gray-500"># อัปเดตค่าตัวแปร (เพื่อไม่ให้ลูปไม่รู้จบ)</div>
+                        </div>
+                        <ul class="text-sm text-gray-300 space-y-2 list-disc list-inside">
+                            <li>ลูปจะประเมินเงื่อนไขก่อน หากเป็น <span class="text-green-400 font-bold">True</span> จะทำงานในลูป</li>
+                            <li>วนกลับมาเช็คเงื่อนไขซ้ำไปเรื่อยๆ จนกว่าเงื่อนไขจะเป็น <span class="text-red-400 font-bold">False</span> จึงจะจบการทำงาน</li>
+                        </ul>
+                    </div>
+
+                    <!-- Code Examples -->
+                    <div class="space-y-4">
+                        <div class="code-block border-l-orange-500 p-5 rounded-xl text-sm">
+                            <div class="text-xs text-gray-500 mb-2 border-b border-gray-700 pb-1">ตัวอย่าง: แสดงตัวเลข 1 ถึง 4</div>
+<pre><code>i = <span class="number">1</span>
+<span class="keyword">while</span> i < <span class="number">5</span>:
+    <span class="function">print</span>(i)
+    i = i + <span class="number">1</span>  <span class="comment"># หรือ i += 1</span></code></pre>
+                        </div>
+                        <div class="code-block border-l-orange-500 p-5 rounded-xl text-sm">
+                            <div class="text-xs text-gray-500 mb-2 border-b border-gray-700 pb-1">ตัวอย่าง: การใช้ break (หยุดลูปทันที)</div>
+<pre><code>i = <span class="number">0</span>
+<span class="keyword">while</span> i <= <span class="number">20</span>:
+    i += <span class="number">2</span>
+    <span class="keyword">if</span> i == <span class="number">10</span>:
+        <span class="keyword text-[#c586c0]">break</span>  <span class="comment"># หยุดทำงานทันทีที่ i เป็น 10</span>
+    <span class="function">print</span>(i)</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive: while loop Simulator -->
+                <div class="mt-8 mb-10 bg-[#1e1e1e] rounded-2xl border border-gray-700 overflow-hidden shadow-2xl">
+                    <div class="bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700">
+                        <div class="flex items-center gap-2 text-gray-300 font-bold text-sm">
+                            <i class="fa-brands fa-python text-orange-400"></i> Interactive: จำลอง Unknown Loop (รับรหัสผ่าน)
+                        </div>
+                        <button onclick="runWhileTerm()" class="bg-orange-600 hover:bg-orange-500 text-white px-4 py-1.5 rounded text-sm font-bold transition-colors flex items-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-play"></i> Run Code
+                        </button>
+                    </div>
+                    <div class="bg-black p-6 font-mono text-sm min-h-[180px] relative" id="while-term-out">
+                        <div class="text-gray-500">>_ Ready... (คลิก Run Code ด้านบนเพื่อจำลองระบบตรวจสอบรหัสผ่าน)</div>
+                        <div class="text-gray-600 mt-2 text-xs"># ใบ้ให้: รหัสผ่านคือ 1234</div>
+                    </div>
+                </div>
+
+                <!-- Buttons Topic 1 -->
+                <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-4 mt-6">
+                    <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-gray-300 bg-gray-800 border border-gray-600 rounded-xl hover:bg-gray-700 transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transform hover:-translate-y-1">
+                        <i class="fa-solid fa-book-open mr-2"></i>
+                        <span>รายละเอียดเพิ่มเติม: การเขียนโปรแกรมแบบวนซ้ำ (while)</span>
+                    </a>
+                    <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-orange-400 bg-orange-500/10 border border-orange-500/30 rounded-xl hover:bg-orange-500 hover:text-white transition-all shadow-[0_0_15px_rgba(249,115,22,0.15)] hover:shadow-[0_0_25px_rgba(249,115,22,0.3)] transform hover:-translate-y-1">
+                        <i class="fa-solid fa-file-code mr-2"></i>
+                        <span>W7 : while loop</span>
+                    </a>
+                    <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-white bg-gradient-to-r from-orange-600 to-orange-500 rounded-xl hover:from-orange-500 hover:to-orange-400 transition-all shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] transform hover:-translate-y-1">
+                        <i class="fa-solid fa-upload mr-2"></i>
+                        <span>ส่งงาน W7 : while loop</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 2: for loop -->
+        <section id="topic2" class="scroll-mt-24">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xl shadow-lg">
+                    <i class="fa-solid fa-repeat"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white">2) การเขียนโปรแกรมแบบวนซ้ำ (for)</h3>
+            </div>
+
+            <div class="bg-python-card rounded-2xl border border-gray-700 p-8 shadow-xl">
+                <p class="text-gray-300 mb-6 leading-relaxed">
+                    <code class="text-blue-400 font-bold">for loop</code> เป็นคำสั่งวนซ้ำที่ใช้ควบคุมการทำงาน <strong class="text-white">ในจำนวนรอบที่แน่นอน</strong> มักจะใช้สำหรับการวนอ่านค่าภายในช่วงตัวเลขจากฟังก์ชัน <code class="text-python-yellow">range()</code> หรือตัวอักษรในข้อความ
+                </p>
+
+                <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Concept & range() -->
+                    <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700">
+                        <h4 class="font-bold text-blue-400 mb-4"><i class="fa-solid fa-ruler-horizontal mr-2"></i> ฟังก์ชัน range()</h4>
+                        <p class="text-sm text-gray-300 mb-4">ใน Python เรามักจะใช้ <code class="text-python-yellow">range()</code> คู่กับ for เพื่อสร้างชุดตัวเลข</p>
+                        
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex flex-col bg-black/40 p-3 rounded-lg border border-gray-700 text-sm">
+                                <span class="font-mono text-python-yellow font-bold">range(stop)</span>
+                                <span class="text-gray-400 mt-1">เช่น <code class="text-white">range(5)</code> จะได้ 0, 1, 2, 3, 4</span>
+                            </li>
+                            <li class="flex flex-col bg-black/40 p-3 rounded-lg border border-gray-700 text-sm">
+                                <span class="font-mono text-python-yellow font-bold">range(start, stop)</span>
+                                <span class="text-gray-400 mt-1">เช่น <code class="text-white">range(2, 6)</code> จะได้ 2, 3, 4, 5</span>
+                            </li>
+                            <li class="flex flex-col bg-black/40 p-3 rounded-lg border border-gray-700 text-sm">
+                                <span class="font-mono text-python-yellow font-bold">range(start, stop, step)</span>
+                                <span class="text-gray-400 mt-1">เช่น <code class="text-white">range(1, 10, 2)</code> จะได้ 1, 3, 5, 7, 9 (เพิ่มทีละ 2)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Code Examples -->
+                    <div class="space-y-4">
+                        <div class="code-block border-l-blue-500 p-5 rounded-xl text-sm">
+                            <div class="text-xs text-gray-500 mb-2 border-b border-gray-700 pb-1">ตัวอย่าง: วนลูปตัวเลขและข้อความ</div>
+<pre><code><span class="comment"># นับเลขถอยหลัง (ลดค่าทีละ 1)</span>
+<span class="keyword">for</span> i <span class="keyword text-[#c586c0]">in</span> <span class="function">range</span>(<span class="number">10</span>, <span class="number">0</span>, <span class="number">-1</span>):
+    <span class="function">print</span>(i)
+
+<span class="comment"># วนลูปดึงตัวอักษรทีละตัว</span>
+<span class="keyword">for</span> char <span class="keyword text-[#c586c0]">in</span> <span class="string">"mango"</span>:
+    <span class="function">print</span>(char)</code></pre>
+                        </div>
+                        <div class="code-block border-l-purple-500 p-5 rounded-xl text-sm">
+                            <div class="text-xs text-gray-500 mb-2 border-b border-gray-700 pb-1">ตัวอย่าง: Nested for loop (ลูปซ้อนลูป)</div>
+<pre><code><span class="comment"># พิมพ์รูปตารางดาว 4x4</span>
+<span class="keyword">for</span> i <span class="keyword text-[#c586c0]">in</span> <span class="function">range</span>(<span class="number">4</span>):
+    <span class="keyword">for</span> j <span class="keyword text-[#c586c0]">in</span> <span class="function">range</span>(<span class="number">4</span>):
+        <span class="function">print</span>(<span class="string">'*'</span>, end=<span class="string">' '</span>)
+    <span class="function">print</span>() <span class="comment"># ขึ้นบรรทัดใหม่เมื่อจบแถว</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive: range() Explorer -->
+                <div class="mt-8 mb-10 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 p-6 md:p-8 shadow-lg">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fa-solid fa-sliders text-blue-400 text-2xl"></i>
+                        <h4 class="text-lg font-bold text-white">Interactive: โปรแกรมสำรวจ range()</h4>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6">ปรับค่า Start, Stop, และ Step เพื่อดูว่าลูป for จะทำงานตามช่วงตัวเลขที่คุณกำหนดอย่างไร</p>
+                    
+                    <div class="flex flex-col md:flex-row gap-6 mb-6">
+                        <!-- Inputs -->
+                        <div class="bg-black/40 p-5 rounded-xl border border-gray-700 flex-1 flex flex-col gap-4">
+                            <div class="font-mono text-python-yellow mb-2 font-bold text-center border-b border-gray-700 pb-2">for i in range(start, stop, step):</div>
+                            
+                            <div class="flex items-center justify-between">
+                                <label class="text-gray-300 font-mono text-sm w-16">start =</label>
+                                <input type="number" id="range-start" value="1" oninput="updateRange()" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white text-center outline-none focus:border-blue-500">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <label class="text-gray-300 font-mono text-sm w-16">stop =</label>
+                                <input type="number" id="range-stop" value="10" oninput="updateRange()" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white text-center outline-none focus:border-blue-500">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <label class="text-gray-300 font-mono text-sm w-16">step =</label>
+                                <input type="number" id="range-step" value="2" oninput="updateRange()" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white text-center outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <!-- Output Visualization -->
+                        <div class="bg-[#1e1e1e] border-l-4 border-blue-500 p-5 rounded-xl flex-1 flex flex-col">
+                            <div class="text-gray-500 text-xs mb-3 font-mono">ผลลัพธ์ของค่า i (Output):</div>
+                            <div id="range-output" class="flex flex-wrap gap-2 text-white font-mono">
+                                <!-- Numbers will be injected here -->
+                            </div>
+                            <div id="range-error" class="hidden text-red-400 text-sm mt-2 font-bold">
+                                <i class="fa-solid fa-triangle-exclamation mr-1"></i> ค่า Step ไม่ถูกต้อง! ทำให้เกิด Infinite Loop
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons Topic 2 -->
+                <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-4 mt-6">
+                    <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-gray-300 bg-gray-800 border border-gray-600 rounded-xl hover:bg-gray-700 transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transform hover:-translate-y-1">
+                        <i class="fa-solid fa-book-open mr-2"></i>
+                        <span>รายละเอียดเพิ่มเติม : การเขียนโปรแกรมแบบวนซ้ำ (for)</span>
+                    </a>
+                    <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-blue-400 bg-blue-500/10 border border-blue-500/30 rounded-xl hover:bg-blue-500 hover:text-white transition-all shadow-[0_0_15px_rgba(59,130,246,0.15)] hover:shadow-[0_0_25px_rgba(59,130,246,0.3)] transform hover:-translate-y-1">
+                        <i class="fa-solid fa-file-code mr-2"></i>
+                        <span>W8 : for loop</span>
+                    </a>
+                    <a href="#" target="_blank" class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-white bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl hover:from-blue-500 hover:to-blue-400 transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transform hover:-translate-y-1">
+                        <i class="fa-solid fa-upload mr-2"></i>
+                        <span>ส่งงาน W8 : for loop</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black py-8 border-t border-gray-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 text-center flex flex-col items-center">
+            <div class="text-purple-500 text-3xl mb-4 opacity-50">
+                <i class="fa-solid fa-rotate-right"></i>
+            </div>
+            <p class="text-gray-400 text-sm md:text-base leading-relaxed mb-2">
+                Copyright © 2026 บทเรียนออนไลน์ การเขียนโปรแกรมคอมพิวเตอร์<br class="hidden md:block">
+                ชั้นมัธยมศึกษาปีที่2 โรงเรียนวิทยาศาสตร์จุฬาภรณราชวิทยาลัย เชียงราย
+            </p>
+            <p class="text-gray-500 text-xs mt-2 font-mono">
+                Dev by Khanapot Chaiwanna, All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Interactive 1: While Loop Simulator (Password logic)
+        let whileSimStep = 0;
+        let passCorrect = false;
+
+        function runWhileTerm() {
+            let out = document.getElementById('while-term-out');
+            whileSimStep = 0;
+            passCorrect = false;
+            
+            out.innerHTML = `
+                <div class="text-gray-600 mb-2 text-xs font-mono">
+                    <span class="text-[#c586c0]">while</span> True:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;pwd = input("Enter Password: ")<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#c586c0]">if</span> pwd == "1234":<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">print</span>("Access Granted")<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#c586c0]">break</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#c586c0]">else</span>:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">print</span>("Wrong Password!")
+                </div>
+                <div class="border-t border-gray-700 my-2"></div>
+            `;
+            
+            promptPassword();
+        }
+
+        function promptPassword() {
+            let out = document.getElementById('while-term-out');
+            const inputId = `sim-input-w-${whileSimStep}`;
+            
+            out.innerHTML += `
+                <div class="mb-1"><span class="text-orange-400">Enter Password: </span>
+                <input type="password" id="${inputId}" class="bg-transparent border-b border-orange-700 outline-none text-white w-24 tracking-widest" onkeydown="handleWhileTerm(event, ${whileSimStep})" autocomplete="off"></div>
+            `;
+            setTimeout(() => document.getElementById(inputId).focus(), 100);
+        }
+
+        function handleWhileTerm(e, stepIndex) {
+            if(e.key === 'Enter') {
+                e.target.disabled = true; 
+                e.target.classList.replace('border-b', 'border-none');
+                
+                let val = e.target.value;
+                let out = document.getElementById('while-term-out');
+                
+                if(val === "1234") {
+                    out.innerHTML += `<div class="text-green-400 font-bold mt-1 mb-2">Access Granted! ลูปหยุดทำงาน (break)</div>`;
+                    out.innerHTML += `<div class="text-gray-500 mt-2">>_ Program finished.</div>`;
+                } else {
+                    out.innerHTML += `<div class="text-red-400 mt-1 mb-3">Wrong Password! ลองใหม่อีกครั้ง</div>`;
+                    whileSimStep++;
+                    promptPassword(); // Loop again
+                }
+            }
+        }
+
+        // Interactive 2: Range Explorer
+        function updateRange() {
+            const startStr = document.getElementById('range-start').value;
+            const stopStr = document.getElementById('range-stop').value;
+            const stepStr = document.getElementById('range-step').value;
+            
+            const start = parseInt(startStr);
+            const stop = parseInt(stopStr);
+            const step = parseInt(stepStr);
+            
+            const outEl = document.getElementById('range-output');
+            const errEl = document.getElementById('range-error');
+            
+            outEl.innerHTML = '';
+            
+            // Check for valid inputs
+            if(isNaN(start) || isNaN(stop) || isNaN(step)) {
+                errEl.classList.remove('hidden');
+                errEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i> กรุณากรอกตัวเลขให้ครบทุกช่อง';
+                return;
+            }
+
+            // Check for infinite loop logic
+            if (step === 0) {
+                errEl.classList.remove('hidden');
+                errEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i> ค่า Step เป็น 0 ไม่ได้ (Error)';
+                return;
+            }
+            if ((start < stop && step < 0) || (start > stop && step > 0)) {
+                errEl.classList.remove('hidden');
+                errEl.innerHTML = '<i class="fa-solid fa-circle-info mr-1"></i> ช่วงข้อมูลขัดแย้งกัน ลูปจะไม่ทำงาน (ได้ผลลัพธ์ว่าง)';
+                return;
+            }
+
+            errEl.classList.add('hidden');
+            
+            // Generate sequence (limit to 50 to prevent freezing browser if user types huge numbers)
+            let current = start;
+            let count = 0;
+            const MAX_ELEMENTS = 50;
+            
+            if (step > 0) {
+                while (current < stop && count < MAX_ELEMENTS) {
+                    addBadge(current, outEl);
+                    current += step;
+                    count++;
+                }
+            } else {
+                while (current > stop && count < MAX_ELEMENTS) {
+                    addBadge(current, outEl);
+                    current += step;
+                    count++;
+                }
+            }
+            
+            if (count === MAX_ELEMENTS) {
+                outEl.innerHTML += `<span class="bg-gray-800 text-gray-500 border border-gray-700 rounded px-2 py-1 flex items-center justify-center">... แสดงผลสูงสุด 50 ตัว</span>`;
+            } else if (count === 0) {
+                outEl.innerHTML = `<span class="text-gray-500 italic">ไม่มีตัวเลขในเงื่อนไขนี้</span>`;
+            }
+        }
+
+        function addBadge(num, container) {
+            container.innerHTML += `<span class="bg-blue-900/30 text-blue-300 border border-blue-500/30 rounded px-3 py-1 font-bold shadow-sm">${num}</span>`;
+        }
+
+        // Initialize range explorer on load
+        window.addEventListener('DOMContentLoaded', updateRange);
+    </script>
+</body>
+</html>
